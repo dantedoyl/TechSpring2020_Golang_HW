@@ -33,7 +33,10 @@ func WriteText(text []string, fileName string) error{
 	defer f.Close()
 
 	for _, str := range text {
-		f.WriteString(str + "\n")
+		_, err := f.WriteString(str + "\n")
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

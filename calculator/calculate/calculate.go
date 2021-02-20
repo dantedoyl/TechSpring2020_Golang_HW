@@ -20,7 +20,7 @@ func getNextSymb(str *string) (string, error) {
 		for ; ch >= 48 && ch <= 57; ch = (*str)[0] {
 			symb += string(ch)
 			*str = (*str)[1:]
-			if len(*str) == 0 {
+			if len((*str)) == 0 {
 				break
 			}
 		}
@@ -35,11 +35,12 @@ func getNextSymb(str *string) (string, error) {
 	return symb, nil
 }
 
-func toPolishNotation(str *string) ([]string, error) {
+func toPolishNotation(str string) ([]string, error) {
 	var polishStr []string
-	var s stack.Stack
-	for len(*str) > 0 {
-		op, err := getNextSymb(str)
+	s := stack.NewStack()
+
+	for len(str) > 0 {
+		op, err := getNextSymb(&str)
 		if err != nil {
 			return nil, err
 		}
@@ -83,7 +84,7 @@ func toPolishNotation(str *string) ([]string, error) {
 	return polishStr, nil
 }
 
-func performCalc(op1 int, op2 int, operator string) (int) {
+func performCalc(op1 int, op2 int, operator string) int {
 	switch operator {
 	case "+":
 		return op1 + op2
@@ -97,15 +98,18 @@ func performCalc(op1 int, op2 int, operator string) (int) {
 }
 
 func Calculate(str string) (int, error) {
-	ops, err := toPolishNotation(&str)
+	ops, err := toPolishNotation(str)
 	if err != nil{
 		return 0, err
 	}
 
-	var s stack.Stack
+	s := stack.NewStack()
 	for len(ops) > 0 {
 		for ch := isNumb(ops[0]); ch; ch = isNumb(ops[0]) {
-			numb, _ := strconv.Atoi(ops[0])
+			numb, err := strconv.Atoi(ops[0])
+			if err != nil {
+				return 0, nil
+			}
 			s.Push(numb)
 			ops = ops[1:]
 		}

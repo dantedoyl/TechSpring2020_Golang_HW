@@ -4,31 +4,37 @@ type Stack struct {
 	data []interface{}
 }
 
-func (stack *Stack) IsEmpty() bool {
-	return len((*stack).data) == 0
+func NewStack() Stack {
+	return Stack{
+		data: []interface{}{},
+	}
 }
 
-func (stack *Stack) Push(el interface{}) {
-	(*stack).data = append((*stack).data, el)
+func (s Stack) IsEmpty() bool {
+	return len((s).data) == 0
 }
 
-func (stack *Stack) Pop() (interface{}, bool) {
-	if stack.IsEmpty() {
+func (s *Stack) Push(el interface{}) {
+	(*s).data = append((*s).data, el)
+}
+
+func (s *Stack) Pop() (interface{}, bool) {
+	if s.IsEmpty() {
 		return "", false
 	} else {
-		ind := len((*stack).data) - 1
-		el := (*stack).data[ind]
-		(*stack).data = (*stack).data[:ind]
+		ind := len((*s).data) - 1
+		el := (*s).data[ind]
+		(*s).data = (*s).data[:ind]
 		return el, true
 	}
 }
 
-func (stack *Stack) Top() (interface{}, bool) {
-	if stack.IsEmpty() {
+func (s Stack) Top() (interface{}, bool) {
+	if s.IsEmpty() {
 		return "", false
 	} else {
-		ind := len((*stack).data) - 1
-		el := (*stack).data[ind]
+		ind := len((s).data) - 1
+		el := (s).data[ind]
 		return el, true
 	}
 }

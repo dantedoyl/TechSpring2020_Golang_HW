@@ -72,13 +72,13 @@ func Uniq(text []string, option ap.Option) ([]string){
 		}
 	case option.MutuallyExcFlag.DuplicateFlag:
 		for _, str := range strSlice{
-			if(str.quantity > 1) {
+			if str.quantity > 1 {
 				resultSlice = append(resultSlice, str.origStr)
 			}
 		}
 	case option.MutuallyExcFlag.UniqueFlag:
 		for _, str := range strSlice{
-			if(str.quantity == 1) {
+			if str.quantity == 1 {
 				resultSlice = append(resultSlice, str.origStr)
 			}
 		}
