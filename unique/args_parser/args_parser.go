@@ -8,9 +8,9 @@ import (
 )
 
 type MutuallyExclusiveFlag struct {
-	CountFlag bool
+	CountFlag     bool
 	DuplicateFlag bool
-	UniqueFlag bool
+	UniqueFlag    bool
 }
 
 type Option struct {
@@ -22,15 +22,15 @@ type Option struct {
 	OutputType      string
 }
 
-func ArgsParser() (*Option, error){
+func ArgsParser() (*Option, error) {
 	var newOption Option
 
 	flag.BoolVar(&newOption.MutuallyExcFlag.CountFlag, "c", false, "count strings")
 	flag.BoolVar(&newOption.MutuallyExcFlag.DuplicateFlag, "d", false, "only duplicate strings")
 	flag.BoolVar(&newOption.MutuallyExcFlag.UniqueFlag, "u", false, "only unique strings")
 	flag.IntVar(&newOption.SkipWordFlag, "f", 0, "skip first num_fildes words")
-	flag.IntVar(&newOption.SkipCharFlag,"s", 0, "skip first num_fields chars")
-	flag.BoolVar(&newOption.IgnoreFlag,"i", false, "ignore registr")
+	flag.IntVar(&newOption.SkipCharFlag, "s", 0, "skip first num_fields chars")
+	flag.BoolVar(&newOption.IgnoreFlag, "i", false, "ignore registr")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stdout, "Usage of %s:\n", os.Args[0])
@@ -40,9 +40,8 @@ func ArgsParser() (*Option, error){
 
 	flag.Parse()
 
-
 	args := flag.Args()
-	switch len(args){
+	switch len(args) {
 	case 0:
 		newOption.InputType = os.Stdin.Name()
 		newOption.OutputType = os.Stdout.Name()

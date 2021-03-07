@@ -4,14 +4,14 @@ import "testing"
 
 func TestReadText(t *testing.T) {
 	_, err := ReadText("dsdsd")
-	if err == nil{
+	if err == nil {
 		t.Error("Error was expected.")
 	}
 }
 
 func TestReadText2(t *testing.T) {
 	_, err := ReadText("../input.txt")
-	if err != nil{
+	if err != nil {
 		t.Error("Unexpected error.")
 	}
 }
@@ -19,7 +19,7 @@ func TestReadText2(t *testing.T) {
 func TestWriteText(t *testing.T) {
 	testStrings := []string{"sdjskhj", "dsjbjhk"}
 	err := WriteText(testStrings, "/weuyh")
-	if err == nil{
+	if err == nil {
 		t.Error("Error was expected.")
 	}
 }
@@ -27,7 +27,7 @@ func TestWriteText(t *testing.T) {
 func TestWriteText2(t *testing.T) {
 	testStrings := []string{"sdjskhj", "dsjbjhk"}
 	err := WriteText(testStrings, "../output.txt")
-	if err != nil{
+	if err != nil {
 		t.Error("Unexpected error.")
 	}
 }

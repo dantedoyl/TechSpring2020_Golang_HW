@@ -76,7 +76,7 @@ func toPolishNotation(str string) ([]string, error) {
 	}
 	for !s.IsEmpty() {
 		operand, _ := s.Pop()
-		if isNumb(operand.(string)){
+		if isNumb(operand.(string)) {
 			return nil, errors.New("In the expression either the delimiter is incorrectly supplied, or the parentheses are not matched")
 		}
 		polishStr = append(polishStr, operand.(string))
@@ -99,7 +99,7 @@ func performCalc(op1 int, op2 int, operator string) int {
 
 func Calculate(str string) (int, error) {
 	ops, err := toPolishNotation(str)
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
 

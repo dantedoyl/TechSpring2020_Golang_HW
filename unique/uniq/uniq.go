@@ -47,8 +47,8 @@ func transformStrings(text []string, skipWord int, skipChar int, ignoreCase bool
 		}
 
 		ind := searchString(uniqStrings, newStr)
-		if ind == -1{
-			uniqStrings = append(uniqStrings,uniqString{
+		if ind == -1 {
+			uniqStrings = append(uniqStrings, uniqString{
 				str:      newStr,
 				origStr:  str,
 				quantity: 1,
@@ -60,30 +60,30 @@ func transformStrings(text []string, skipWord int, skipChar int, ignoreCase bool
 	return uniqStrings
 }
 
-func Uniq(text []string, option ap.Option) ([]string){
-	resultSlice  := []string{}
+func Uniq(text []string, option ap.Option) []string {
+	resultSlice := []string{}
 
 	strSlice := transformStrings(text, option.SkipWordFlag, option.SkipCharFlag, option.IgnoreFlag)
 
 	switch {
 	case option.MutuallyExcFlag.CountFlag:
-		for _, str := range strSlice{
+		for _, str := range strSlice {
 			resultSlice = append(resultSlice, fmt.Sprintf("%d %s", str.quantity, str.origStr))
 		}
 	case option.MutuallyExcFlag.DuplicateFlag:
-		for _, str := range strSlice{
+		for _, str := range strSlice {
 			if str.quantity > 1 {
 				resultSlice = append(resultSlice, str.origStr)
 			}
 		}
 	case option.MutuallyExcFlag.UniqueFlag:
-		for _, str := range strSlice{
+		for _, str := range strSlice {
 			if str.quantity == 1 {
 				resultSlice = append(resultSlice, str.origStr)
 			}
 		}
 	default:
-		for _, str := range strSlice{
+		for _, str := range strSlice {
 			resultSlice = append(resultSlice, str.origStr)
 		}
 	}

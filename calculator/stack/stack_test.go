@@ -15,7 +15,7 @@ func TestStack_Push(t *testing.T) {
 
 	stack.Push("12")
 
-	if exp,_ := stack.Pop(); exp != "12"{
+	if exp, _ := stack.Pop(); exp != "12" {
 		t.Error("Expected value.")
 	}
 }
@@ -25,7 +25,7 @@ func TestStack_Top(t *testing.T) {
 
 	stack.Push("12")
 
-	if exp,_ := stack.Top(); exp != "12"{
+	if exp, _ := stack.Top(); exp != "12" {
 		t.Error("Expected value.")
 	}
 
@@ -43,4 +43,3 @@ func TestStack_Pop(t *testing.T) {
 		t.Error("Expected error.")
 	}
 }
-

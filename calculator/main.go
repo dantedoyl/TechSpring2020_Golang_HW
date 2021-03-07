@@ -1,9 +1,9 @@
 package main
 
 import (
+	"calculator/calculate"
 	"fmt"
 	"os"
-	"calculator/calculate"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 	}
 	str := os.Args[1]
 	result, err := calculate.Calculate(str)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}

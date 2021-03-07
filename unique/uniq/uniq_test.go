@@ -39,7 +39,7 @@ func TestUniq(t *testing.T) {
 	}
 
 	testResult := Uniq(testStrings, testOption)
-	if !reflect.DeepEqual(testResult, expectedStrings){
+	if !reflect.DeepEqual(testResult, expectedStrings) {
 		t.Error("Wrong answer.")
 	}
 
@@ -75,7 +75,7 @@ func TestUniq1(t *testing.T) {
 	}
 
 	testResult := Uniq(testStrings, testOption)
-	if !reflect.DeepEqual(testResult, expectedStrings){
+	if !reflect.DeepEqual(testResult, expectedStrings) {
 		t.Error("Wrong answer.")
 	}
 
@@ -112,7 +112,7 @@ func TestUniq2(t *testing.T) {
 	}
 
 	testResult := Uniq(testStrings, testOption)
-	if !reflect.DeepEqual(testResult, expectedStrings){
+	if !reflect.DeepEqual(testResult, expectedStrings) {
 		t.Error("Wrong answer.")
 	}
 
@@ -149,7 +149,7 @@ func TestUniq3(t *testing.T) {
 	}
 
 	testResult := Uniq(testStrings, testOption)
-	if !reflect.DeepEqual(testResult, expectedStrings){
+	if !reflect.DeepEqual(testResult, expectedStrings) {
 		t.Error("Wrong answer.")
 	}
 

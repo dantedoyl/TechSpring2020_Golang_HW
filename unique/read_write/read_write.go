@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func ReadText(fileName string) ([]string,error){
+func ReadText(fileName string) ([]string, error) {
 	var text []string
 
 	file, err := os.Open(fileName)
@@ -24,7 +24,7 @@ func ReadText(fileName string) ([]string,error){
 	return text, nil
 }
 
-func WriteText(text []string, fileName string) error{
+func WriteText(text []string, fileName string) error {
 	f, err := os.Create(fileName)
 	if err != nil {
 		return err
