@@ -13,91 +13,105 @@ import (
 var mtx sync.Mutex
 
 func toString(data interface{}) (string, error) {
-	if str, ok := data.(string); ok{
+	if str, ok := data.(string); ok {
 		return str, nil
 	}
 
-	if intStr, ok := data.(int); ok{
+	if intStr, ok := data.(int); ok {
 		return strconv.Itoa(intStr), nil
 	}
 
 	return "", errors.New("Can't convert expression to string.")
 }
 
-func SingleHash(in, out chan interface{}){
+func SingleHash(in, out chan interface{}) {
 	wg := &sync.WaitGroup{}
 	for val := range in {
 		wg.Add(1)
 		str, _ := toString(val)
 
-		hashes := make([]chan string, 2)
-		for i := range hashes {
-			hashes[i] = make(chan string, 1)
-		}
+		crc32Hash := make(chan string, 1)
 
-		// crc32(data)
 		go func(data string, out chan<- string) {
 			out <- DataSignerCrc32(data)
-		}(str, hashes[0])
+		}(str, crc32Hash)
 
-		// crc32(md5(data))
+		md5Hash := make(chan string, 1)
+
 		go func(data string, out chan<- string) {
 			mtx.Lock()
 			md5Data := DataSignerMd5(data)
 			mtx.Unlock()
 			out <- DataSignerCrc32(md5Data)
-		}(str, hashes[1])
+		}(str, md5Hash)
 
-		// result hash
 		go func() {
 			defer wg.Done()
-			out <- (<-hashes[0])+"~"+(<-hashes[1])
+			out <- (<-crc32Hash) + "~" + (<-md5Hash)
 		}()
 	}
 	wg.Wait()
 }
 
-func MultiHash (in, out chan interface{}){
+func MultiHash(in, out chan interface{}) {
 	wg := &sync.WaitGroup{}
 	for val := range in {
 		wg.Add(1)
 		str, _ := toString(val)
 
-		hashes :=make([]chan string, 6)
-		for th := range hashes {
-			hashes[th] = make(chan string, 1)
-			//crc32(th+data)
-			go func(data string, out chan<- string) {
-				out <- DataSignerCrc32(data)
-			}(strconv.Itoa(th) + str, hashes[th])
-		}
+		hash0 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("0"+str, hash0)
+
+		hash1 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("1"+str, hash1)
+
+		hash2 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("2"+str, hash2)
+
+		hash3 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("3"+str, hash3)
+
+		hash4 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("4"+str, hash4)
+
+		hash5 := make(chan string, 1)
+		go func(data string, out chan<- string) {
+			out <- DataSignerCrc32(data)
+		}("5"+str, hash5)
 
 		go func() {
 			defer wg.Done()
 			resStr := ""
-			for i := range hashes{
-				resStr += <-hashes[i]
-			}
+			resStr = <-hash0 + <-hash1 + <-hash2 + <-hash3 + <-hash4 + <-hash5
 			out <- resStr
 		}()
 	}
 	wg.Wait()
 }
 
-func CombineResults(in, out chan interface{}){
+func CombineResults(in, out chan interface{}) {
 	var strTempSlice []string
 	for val := range in {
 		str, _ := toString(val)
 		strTempSlice = append(strTempSlice, str)
 	}
 
-	//sorting
 	sort.Strings(strTempSlice)
 
 	out <- strings.Join(strTempSlice, "_")
 }
 
-func ExecutePipeline(jobs ...job){
+func ExecutePipeline(jobs ...job) {
 	wg := &sync.WaitGroup{}
 	in := make(chan interface{}, MaxInputDataLen)
 
