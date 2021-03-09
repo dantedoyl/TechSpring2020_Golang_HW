@@ -12,6 +12,11 @@ import (
 
 var mtx sync.Mutex
 
+type multiHashType struct {
+	th   int
+	hash string
+}
+
 func toString(data interface{}) (string, error) {
 	if str, ok := data.(string); ok {
 		return str, nil
@@ -30,13 +35,13 @@ func SingleHash(in, out chan interface{}) {
 		wg.Add(1)
 		str, _ := toString(val)
 
-		crc32Hash := make(chan string, 1)
+		crc32Hash := make(chan string)
 
 		go func(data string, out chan<- string) {
 			out <- DataSignerCrc32(data)
 		}(str, crc32Hash)
 
-		md5Hash := make(chan string, 1)
+		md5Hash := make(chan string)
 
 		go func(data string, out chan<- string) {
 			mtx.Lock()
@@ -59,41 +64,32 @@ func MultiHash(in, out chan interface{}) {
 		wg.Add(1)
 		str, _ := toString(val)
 
-		hash0 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("0"+str, hash0)
+		innerWg := &sync.WaitGroup{}
+		hash := make(chan multiHashType)
 
-		hash1 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("1"+str, hash1)
+		for th := 0; th < 6; th++ {
+			innerWg.Add(1)
+			go func(data string, th int, out chan<- multiHashType) {
+				out <- multiHashType{
+					th:   th,
+					hash: DataSignerCrc32(data),
+				}
+				innerWg.Done()
+			}(strconv.Itoa(th)+str, th, hash)
+		}
 
-		hash2 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("2"+str, hash2)
-
-		hash3 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("3"+str, hash3)
-
-		hash4 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("4"+str, hash4)
-
-		hash5 := make(chan string, 1)
-		go func(data string, out chan<- string) {
-			out <- DataSignerCrc32(data)
-		}("5"+str, hash5)
+		go func(innerWg *sync.WaitGroup, ch chan multiHashType) {
+			innerWg.Wait()
+			close(hash)
+		}(innerWg, hash)
 
 		go func() {
 			defer wg.Done()
-			resStr := ""
-			resStr = <-hash0 + <-hash1 + <-hash2 + <-hash3 + <-hash4 + <-hash5
-			out <- resStr
+			var arr = make([]string, 6)
+			for h := range hash {
+				arr[h.th] = h.hash
+			}
+			out <- strings.Join(arr, "")
 		}()
 	}
 	wg.Wait()
